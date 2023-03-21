@@ -26,29 +26,20 @@ public class ThreadsLatch {
 
     }
 
+    @Slf4j
+    private record Worker(CountDownLatch latch) implements Runnable {
 
-}
-
-
-@Slf4j
-class Worker implements Runnable {
-
-    private final CountDownLatch latch;
-
-    public Worker(final CountDownLatch latch) {
-        this.latch = latch;
-    }
-
-    @Override
-    public void run() {
-        try {
-            log.info("do important job, latch: " + latch.getCount());
-            TimeUnit.SECONDS.sleep(1);
-            latch.countDown();
-            latch.await();
-            log.info("job successful");
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        @Override
+        public void run() {
+            try {
+                log.info("do important job, latch: " + latch.getCount());
+                TimeUnit.SECONDS.sleep(1);
+                latch.countDown();
+                latch.await();
+                log.info("job successful");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

@@ -14,19 +14,19 @@ public class ThreadVanilla {
         thread.interrupt();
     }
 
-}
-
-@Slf4j
-class TestSleep implements Runnable{
-    @Override
-    public void run() {
-        log.info("start");
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException ignored) {
-            log.info("exception");
+    @Slf4j
+    private record TestSleep() implements Runnable {
+        @Override
+        public void run() {
+            log.info("start");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ignored) {
+                log.info("exception");
+            }
+            log.info(String.valueOf(Thread.currentThread().isInterrupted()));       //when thread sleep interrupt is false
+            log.info("end");
         }
-        log.info(String.valueOf(Thread.currentThread().isInterrupted()));       //when thread sleep interrupt is false
-        log.info("end");
     }
+
 }

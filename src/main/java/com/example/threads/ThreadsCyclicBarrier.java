@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 @SpringBootApplication
 public class ThreadsCyclicBarrier {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
         ExecutorService executorService = Executors.newFixedThreadPool(12);
         CyclicBarrier barrier = new CyclicBarrier(6, new Race());
@@ -25,7 +25,8 @@ public class ThreadsCyclicBarrier {
 
         IntStream.range(0, 12).forEach(o -> threads.add(new Car(o, barrier)));
 
-        threads.forEach(car -> {executorService.submit(car);
+        threads.forEach(car -> {
+            executorService.submit(car);
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
@@ -37,35 +38,26 @@ public class ThreadsCyclicBarrier {
 
     }
 
-}
 
+    @Slf4j
+    private record Race() implements Runnable {
 
-@Slf4j
-class Race implements Runnable {
-
-    @Override
-    public void run() {
-        log.info("5..4..3..2..1..Start!");
-    }
-}
-
-@Slf4j
-class Car implements Runnable {
-
-    private final int carNumber;
-    private final CyclicBarrier barrier;
-
-    Car(final int carNumber, final CyclicBarrier barrier) {
-        this.carNumber = carNumber;
-        this.barrier = barrier;
+        @Override
+        public void run() {
+            log.info("5..4..3..2..1..Start!");
+        }
     }
 
-    @SneakyThrows
-    @Override
-    public void run() {
-        log.info("car " + carNumber + " is ready!");
-        barrier.await();
-        TimeUnit.MILLISECONDS.sleep(800);
-        log.info("car " + carNumber + " finished!");
+    @Slf4j
+    private record Car(int carNumber, CyclicBarrier barrier) implements Runnable {
+
+        @SneakyThrows
+        @Override
+        public void run() {
+            log.info("car " + carNumber + " is ready!");
+            barrier.await();
+            TimeUnit.MILLISECONDS.sleep(800);
+            log.info("car " + carNumber + " finished!");
+        }
     }
 }

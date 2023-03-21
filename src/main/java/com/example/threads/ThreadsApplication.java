@@ -20,10 +20,10 @@ public class ThreadsApplication {
 
     public static void main(String[] args) throws InterruptedException {
 
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
         List<Supplier<Double>> threads = new ArrayList<>();
 
-        for (int t = 0; t < 1000; t++) {
+        for (int t = 0; t < 100; t++) {
             int finalT = t;
             threads.add(() -> thread(finalT));
         }
@@ -48,12 +48,13 @@ public class ThreadsApplication {
         log.info(String.valueOf(CompletableFuture.allOf(futures).isDone()));
 
         CompletableFuture.allOf(futures)
-                .thenRun(() -> log.info("done"))
+                .thenRun(() -> log.info("result:"))
+                .thenRun(() -> result.forEach(d -> log.info(String.valueOf(d))))
                 .thenRun(() -> log.info(String.valueOf(thread(5))));
 
         log.info(String.valueOf(CompletableFuture.allOf(futures).isDone()));
 
-        result.forEach(aDouble -> log.info(String.valueOf(aDouble)));
+        log.info("main exit");
 
 
 
@@ -63,11 +64,13 @@ public class ThreadsApplication {
     }
 
     public static double thread(int num) {
+        log.info("start: " +num);
         try {
-            Thread.sleep(10000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        log.info("exit");
         return Math.random() * 100 / num;
     }
 

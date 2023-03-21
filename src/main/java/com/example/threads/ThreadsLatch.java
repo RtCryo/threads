@@ -13,7 +13,7 @@ public class ThreadsLatch {
     public static void main(String[] args) {
         CountDownLatch countDownLatch = new CountDownLatch(5);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
         List<Runnable> threads = new ArrayList<>();
 
         for (int t = 0; t < 10; t++)
@@ -45,6 +45,7 @@ class Worker implements Runnable {
             log.info("do important job, latch: " + latch.getCount());
             TimeUnit.SECONDS.sleep(1);
             latch.countDown();
+            latch.await();
             log.info("job successful");
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

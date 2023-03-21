@@ -32,8 +32,6 @@ public class ThreadsExchanger {
         executorService.shutdown();
     }
 
-
-    @Slf4j
     private record Trip(Exchanger<Trans> exchanger, List<Trans> transList) implements Runnable {
 
         @Override

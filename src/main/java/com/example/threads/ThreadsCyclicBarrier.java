@@ -38,8 +38,6 @@ public class ThreadsCyclicBarrier {
 
     }
 
-
-    @Slf4j
     private record Race() implements Runnable {
 
         @Override
@@ -48,7 +46,6 @@ public class ThreadsCyclicBarrier {
         }
     }
 
-    @Slf4j
     private record Car(int carNumber, CyclicBarrier barrier) implements Runnable {
 
         @SneakyThrows

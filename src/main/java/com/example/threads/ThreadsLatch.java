@@ -26,7 +26,6 @@ public class ThreadsLatch {
 
     }
 
-    @Slf4j
     private record Worker(CountDownLatch latch) implements Runnable {
 
         @Override

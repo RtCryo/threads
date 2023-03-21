@@ -14,7 +14,6 @@ public class ThreadVanilla {
         thread.interrupt();
     }
 
-    @Slf4j
     private record TestSleep() implements Runnable {
         @Override
         public void run() {

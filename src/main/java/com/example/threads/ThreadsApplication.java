@@ -18,7 +18,7 @@ public class ThreadsApplication {
 
     private static final Collection<Double> result = Collections.synchronizedCollection(new ArrayList<>());
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         List<Supplier<Double>> threads = new ArrayList<>();
@@ -27,17 +27,6 @@ public class ThreadsApplication {
             int finalT = t;
             threads.add(() -> thread(finalT));
         }
-//
-//        CompletableFuture<?>[] futures = threads.stream()
-//                .map(task -> CompletableFuture.supplyAsync(() -> task, executorService).thenAccept(runnable -> System.out.println(runnable.toString())))
-//                .toArray(CompletableFuture[]::new);
-//
-//        executorService.shutdown();
-//
-//        System.out.println("await");
-//        CompletableFuture.allOf(futures).join();
-//        System.out.println("done");
-
 
         CompletableFuture<?>[] futures = threads.stream()
                 .map(o ->  CompletableFuture.supplyAsync(o, executorService).thenAccept(ThreadsApplication::addDouble))
@@ -55,11 +44,6 @@ public class ThreadsApplication {
         log.info(String.valueOf(CompletableFuture.allOf(futures).isDone()));
 
         log.info("main exit");
-
-
-
-        //CompletableFuture.supplyAsync(() -> thread(10)).thenAccept(aDouble -> log.info(String.valueOf(aDouble)));
-
 
     }
 

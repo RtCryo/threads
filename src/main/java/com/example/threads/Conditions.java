@@ -42,9 +42,10 @@ public class Conditions {
         public void run() {
             for (String i : goods) {
                 log.info("put new product: " + i);
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.MILLISECONDS.sleep(100);
                 store.put(i);
                 log.info("new product is available");
+                log.info("goods: " + store.goods().size());
             }
         }
     }

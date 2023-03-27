@@ -6,10 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -18,17 +15,22 @@ public class ThreadsCyclicBarrier {
 
     public static void main(String[] args) {
 
-        ExecutorService executorService = Executors.newFixedThreadPool(12);
-        CyclicBarrier barrier = new CyclicBarrier(6, new Race());
+        //ExecutorService executorService = Executors.newFixedThreadPool(12);
+
+        ExecutorService executorService = new ThreadPoolExecutor(4, 100,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>(50));
+
+        CyclicBarrier barrier = new CyclicBarrier(4, new Race());
 
         List<Car> threads = new ArrayList<>();
 
-        IntStream.range(0, 12).forEach(o -> threads.add(new Car(o, barrier)));
+        IntStream.range(0, 1000).forEach(o -> threads.add(new Car(o, barrier)));
 
         threads.forEach(car -> {
             executorService.submit(car);
             try {
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.MILLISECONDS.sleep(10);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
